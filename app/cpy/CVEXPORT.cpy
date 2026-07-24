@@ -73,31 +73,31 @@
                10  EXP-TRAN-MERCHANT-NAME          PIC X(50).
                10  EXP-TRAN-MERCHANT-CITY          PIC X(50).
                10  EXP-TRAN-MERCHANT-ZIP           PIC X(10).
-               10  EXP-TRAN-CARD-NUM               PIC X(16).
+               10  EXP-TRAN-CARD-NUM               PIC X(17).
                10  EXP-TRAN-ORIG-TS                PIC X(26).
                10  EXP-TRAN-PROC-TS                PIC X(26).
-               10  FILLER                          PIC X(140).
+               10  FILLER                          PIC X(139).
 
       ******************************************************************
       * Card Cross-Reference Structure - From CVACT03Y.cpy
       ******************************************************************
            05  EXPORT-CARD-XREF-DATA REDEFINES EXPORT-RECORD-DATA.
-               10  EXP-XREF-CARD-NUM               PIC X(16).
+               10  EXP-XREF-CARD-NUM               PIC X(17).
                10  EXP-XREF-CUST-ID                PIC 9(09).
                10  EXP-XREF-ACCT-ID                PIC 9(11) COMP.
-               10  FILLER                          PIC X(427).
+               10  FILLER                          PIC X(426).
 
       ******************************************************************
       * Card Record Structure - From CVACT02Y.cpy
       ******************************************************************
            05  EXPORT-CARD-DATA REDEFINES EXPORT-RECORD-DATA.
-               10  EXP-CARD-NUM                    PIC X(16).
+               10  EXP-CARD-NUM                    PIC X(17).
                10  EXP-CARD-ACCT-ID                PIC 9(11) COMP.
                10  EXP-CARD-CVV-CD                 PIC 9(03) COMP.
                10  EXP-CARD-EMBOSSED-NAME          PIC X(50).
                10  EXP-CARD-EXPIRAION-DATE         PIC X(10).
                10  EXP-CARD-ACTIVE-STATUS          PIC X(01).
-               10  FILLER                          PIC X(373).      
+               10  FILLER                          PIC X(372).      
       *
       * Ver: CardDemo_v2.0-44-gb6e9c27-254 Date: 2025-10-16 14:07:18 CDT
       *

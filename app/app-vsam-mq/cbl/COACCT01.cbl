@@ -119,7 +119,7 @@
           05 WS-REAS-CD                          PIC S9(09) COMP        01251500
                                                    VALUE ZEROS.         01251600
          05  WS-XREF-RID.                                               01251700
-           10  WS-CARD-RID-CARDNUM                 PIC X(16).           01252000
+           10  WS-CARD-RID-CARDNUM                 PIC X(17).           01252000
            10  WS-CARD-RID-CUST-ID                 PIC 9(09).           01253000
            10  WS-CARD-RID-CUST-ID-X REDEFINES                          01254000
                   WS-CARD-RID-CUST-ID              PIC X(09).           01255000

@@ -135,7 +135,7 @@
       ******************************************************************        
          05 WS-FILE-HANDLING-VARS.                                              
             10  WS-CARD-RID.                                                    
-                20  WS-CARD-RID-CARDNUM            PIC X(16).                   
+                20  WS-CARD-RID-CARDNUM            PIC X(17).                   
                 20  WS-CARD-RID-ACCT-ID            PIC 9(11).                   
                 20  WS-CARD-RID-ACCT-ID-X          REDEFINES                    
                     WS-CARD-RID-ACCT-ID            PIC X(11).                   
@@ -220,6 +220,9 @@
       ******************************************************************        
        COPY CVCRD01Y.                                                           
                                                                                 
+      *Card number normalization work area                                      
+       COPY CVCRDNMY.                                                           
+                                                                                
       ******************************************************************        
       *  Commarea manipulations                                                 
       ******************************************************************        
@@ -228,10 +231,10 @@
                                                                                 
        01 WS-THIS-PROGCOMMAREA.                                                 
             10 WS-CA-LAST-CARDKEY.                                              
-               15  WS-CA-LAST-CARD-NUM                PIC X(16).                
+               15  WS-CA-LAST-CARD-NUM                PIC X(17).                
                15  WS-CA-LAST-CARD-ACCT-ID            PIC 9(11).                
             10 WS-CA-FIRST-CARDKEY.                                             
-               15  WS-CA-FIRST-CARD-NUM               PIC X(16).                
+               15  WS-CA-FIRST-CARD-NUM               PIC X(17).                
                15  WS-CA-FIRST-CARD-ACCT-ID           PIC 9(11).                
                                                                                 
             10 WS-CA-SCREEN-NUM                       PIC 9(1).                 
@@ -247,16 +250,16 @@
            88  WS-RETURN-FLAG-OFF                  VALUE LOW-VALUES.            
            88  WS-RETURN-FLAG-ON                   VALUE '1'.                   
       ******************************************************************        
-      *  File Data Array         28 CHARS X 7 ROWS = 196                        
+      *  File Data Array         29 CHARS X 7 ROWS = 203                        
       ******************************************************************        
          05 WS-SCREEN-DATA.                                                     
-            10 WS-ALL-ROWS                         PIC X(196).                  
+            10 WS-ALL-ROWS                         PIC X(203).                  
             10 FILLER REDEFINES WS-ALL-ROWS.                                    
                15 WS-SCREEN-ROWS OCCURS  7 TIMES.                               
                   20 WS-EACH-ROW.                                               
                      25 WS-EACH-CARD.                                           
                         30 WS-ROW-ACCTNO           PIC X(11).                   
-                        30 WS-ROW-CARD-NUM         PIC X(16).                   
+                        30 WS-ROW-CARD-NUM         PIC X(17).                   
                         30 WS-ROW-CARD-STATUS      PIC X(1).                    
                                                                                 
        01  WS-COMMAREA                             PIC X(2000).                 
@@ -1035,7 +1038,7 @@
                                                                                 
        2220-EDIT-CARD.                                                          
       *    Not numeric                                                          
-      *    Not 16 characters                                                    
+      *    Not 16 or 17 characters                                              
            SET FLG-CARDFILTER-BLANK TO TRUE                                     
                                                                                 
       *    Not supplied                                                         
@@ -1047,15 +1050,22 @@
               GO TO  2220-EDIT-CARD-EXIT                                        
            END-IF                                                               
       *                                                                         
+      *    Accept a legacy 16 digit card number by normalizing it to            
+      *    17 digits, right justified and zero padded on the left               
+           MOVE CC-CARD-NUM              TO WS-CARDNUM-NORM-IN                  
+           PERFORM Z100-NORMALIZE-CARDNUM                                       
+              THRU Z100-NORMALIZE-CARDNUM-EXIT                                  
+           MOVE WS-CARDNUM-NORM-OUT      TO CC-CARD-NUM                         
+      *                                                                         
       *    Not numeric                                                          
-      *    Not 16 characters                                                    
+      *    Not 16 or 17 characters                                              
            IF CC-CARD-NUM  IS NOT NUMERIC                                       
               SET INPUT-ERROR TO TRUE                                           
               SET FLG-CARDFILTER-NOT-OK TO TRUE                                 
               SET FLG-PROTECT-SELECT-ROWS-YES TO TRUE                           
               IF WS-ERROR-MSG-OFF                                               
                  MOVE                                                           
-              'CARD ID FILTER,IF SUPPLIED MUST BE A 16 DIGIT NUMBER'            
+              'CARD ID FILTER,IF SUPPLIED MUST BE A 17 DIGIT NUMBER'            
                               TO WS-ERROR-MSG                                   
               END-IF                                                            
               MOVE ZERO       TO CDEMO-CARD-NUM                                 
@@ -1415,6 +1425,10 @@
       *****************************************************************
        COPY 'CSSTRPFY'
            .
+      ******************************************************************        
+      *Common code to normalize a card number to 17 digits                      
+      ******************************************************************        
+       COPY CSNRMCDY.                                                           
 
       *****************************************************************         
       * Plain text exit - Dont use in production                      *         
