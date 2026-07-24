@@ -70,7 +70,7 @@
       *      File and data Handling                                             
       ******************************************************************        
          05 WS-XREF-RID.                                                        
-           10  WS-CARD-RID-CARDNUM                 PIC X(16).                   
+           10  WS-CARD-RID-CARDNUM                 PIC X(17).                   
            10  WS-CARD-RID-CUST-ID                 PIC 9(09).                   
            10  WS-CARD-RID-CUST-ID-X REDEFINES                                  
                   WS-CARD-RID-CUST-ID              PIC X(09).                   
@@ -176,6 +176,9 @@
       *- PENDING AUTHORIZATION REQUEST LAYOUT                                   
        01 PENDING-AUTH-REQUEST.                                                 
        COPY CCPAURQY.                                                           
+                                                                                
+      *  CARD NUMBER NORMALIZATION WORK AREA                                    
+       COPY CVCRDNMY.                                                           
                                                                                 
       *- PENDING AUTHORIZATION RESPONSE LAYOUT                                  
        01 PENDING-AUTH-RESPONSE.                                                
@@ -372,6 +375,13 @@
                          PA-RQ-MERCHANT-ZIP                                     
                          PA-RQ-TRANSACTION-ID                                   
            END-UNSTRING                                                         
+                                                                                
+      *    Accept a legacy 16 digit card number by normalizing it to            
+      *    17 digits, right justified and zero padded on the left               
+           MOVE PA-RQ-CARD-NUM           TO WS-CARDNUM-NORM-IN                  
+           PERFORM Z100-NORMALIZE-CARDNUM                                       
+              THRU Z100-NORMALIZE-CARDNUM-EXIT                                  
+           MOVE WS-CARDNUM-NORM-OUT      TO PA-RQ-CARD-NUM                      
                                                                                 
            COMPUTE PA-RQ-TRANSACTION-AMT =                                      
                                FUNCTION NUMVAL(WS-TRANSACTION-AMT-AN)           
@@ -1023,4 +1033,9 @@
            .                                                                    
        9990-EXIT.                                                               
            EXIT.                                                                
+      *                                                                         
+      * ------------------------------------------------------------- *         
+      *  COMMON CODE TO NORMALIZE A CARD NUMBER TO 17 DIGITS                    
+      * ------------------------------------------------------------- *         
+       COPY CSNRMCDY.                                                           
       *                                                                         

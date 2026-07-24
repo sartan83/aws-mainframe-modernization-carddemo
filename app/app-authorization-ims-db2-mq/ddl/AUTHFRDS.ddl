@@ -1,5 +1,5 @@
 CREATE TABLE CARDDEMO.AUTHFRDS
-(CARD_NUM              CHAR(16)    NOT NULL,
+(CARD_NUM              CHAR(17)    NOT NULL,
     AUTH_TS                TIMESTAMP   NOT NULL,
     AUTH_TYPE              CHAR(4)             ,
     CARD_EXPIRY_DATE       CHAR(4)             ,

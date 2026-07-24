@@ -76,9 +76,9 @@
            10  CARD-CVV-CD-X                       PIC X(03).                   
            10  CARD-CVV-CD-N REDEFINES  CARD-CVV-CD-X                           
                                                    PIC 9(03).                   
-           10  CARD-CARD-NUM-X                     PIC X(16).                   
+           10  CARD-CARD-NUM-X                     PIC X(17).                   
            10  CARD-CARD-NUM-N REDEFINES  CARD-CARD-NUM-X                       
-                                                   PIC 9(16).                   
+                                                   PIC 9(17).                   
            10  CARD-NAME-EMBOSSED-X                PIC X(50).                   
            10  CARD-STATUS-X                       PIC X.                       
            10  CARD-EXPIRAION-DATE-X               PIC X(10).                   
@@ -95,7 +95,7 @@
       *      File and data Handling                                             
       ******************************************************************        
          05  WS-CARD-RID.                                                       
-           10  WS-CARD-RID-CARDNUM                 PIC X(16).                   
+           10  WS-CARD-RID-CARDNUM                 PIC X(17).                   
            10  WS-CARD-RID-ACCT-ID                 PIC 9(11).                   
            10  WS-CARD-RID-ACCT-ID-X REDEFINES                                  
                   WS-CARD-RID-ACCT-ID              PIC X(11).                   
@@ -146,7 +146,7 @@
            88  SEARCHED-ACCT-NOT-NUMERIC           VALUE                        
                'Account number must be a non zero 11 digit number'.             
            88  SEARCHED-CARD-NOT-NUMERIC           VALUE                        
-               'Card number if supplied must be a 16 digit number'.             
+               'Card number if supplied must be a 17 digit number'.             
                                                                                 
            88  DID-NOT-FIND-ACCT-IN-CARDXREF       VALUE                        
                'Did not find this account in cards database'.                   
@@ -192,6 +192,9 @@
       *Other common working storage Variables                                   
       ******************************************************************        
        COPY CVCRD01Y.                                                           
+                                                                                
+      *Card number normalization work area                                      
+       COPY CVCRDNMY.                                                           
                                                                                 
       ******************************************************************        
       *Application Commmarea Copybook                                           
@@ -684,7 +687,7 @@
                                                                                 
        2220-EDIT-CARD.                                                          
       *    Not numeric                                                          
-      *    Not 16 characters                                                    
+      *    Not 16 or 17 characters                                              
            SET FLG-CARDFILTER-NOT-OK TO TRUE                                    
                                                                                 
       *    Not supplied                                                         
@@ -701,14 +704,21 @@
               GO TO  2220-EDIT-CARD-EXIT                                        
            END-IF                                                               
       *                                                                         
+      *    Accept a legacy 16 digit card number by normalizing it to            
+      *    17 digits, right justified and zero padded on the left               
+           MOVE CC-CARD-NUM              TO WS-CARDNUM-NORM-IN                  
+           PERFORM Z100-NORMALIZE-CARDNUM                                       
+              THRU Z100-NORMALIZE-CARDNUM-EXIT                                  
+           MOVE WS-CARDNUM-NORM-OUT      TO CC-CARD-NUM                         
+      *                                                                         
       *    Not numeric                                                          
-      *    Not 16 characters                                                    
+      *    Not 16 or 17 characters                                              
            IF CC-CARD-NUM  IS NOT NUMERIC                                       
               SET INPUT-ERROR TO TRUE                                           
               SET FLG-CARDFILTER-NOT-OK TO TRUE                                 
               IF WS-RETURN-MSG-OFF                                              
                  MOVE                                                           
-              'CARD ID FILTER,IF SUPPLIED MUST BE A 16 DIGIT NUMBER'            
+              'CARD ID FILTER,IF SUPPLIED MUST BE A 17 DIGIT NUMBER'            
                               TO WS-RETURN-MSG                                  
               END-IF                                                            
               MOVE ZERO       TO CDEMO-CARD-NUM                                 
@@ -854,6 +864,10 @@
       ******************************************************************
        COPY 'CSSTRPFY'
            .
+      ******************************************************************        
+      *Common code to normalize a card number to 17 digits                      
+      ******************************************************************        
+       COPY CSNRMCDY.                                                           
        ABEND-ROUTINE.                                                           
                                                                                 
            IF ABEND-MSG EQUAL LOW-VALUES                                        

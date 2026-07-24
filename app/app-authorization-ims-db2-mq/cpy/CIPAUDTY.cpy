@@ -21,7 +21,7 @@
                10 PA-AUTH-TIME-9C           PIC S9(09) COMP-3.                  
            05  PA-AUTH-ORIG-DATE            PIC  X(06).                         
            05  PA-AUTH-ORIG-TIME            PIC  X(06).                         
-           05  PA-CARD-NUM                  PIC  X(16).                         
+           05  PA-CARD-NUM                  PIC  X(17).                         
            05  PA-AUTH-TYPE                 PIC  X(04).                         
            05  PA-CARD-EXPIRY-DATE          PIC  X(04).                         
            05  PA-MESSAGE-TYPE              PIC  X(06).                         
@@ -51,4 +51,4 @@
                88 PA-FRAUD-CONFIRMED        VALUE 'F'.                          
                88 PA-FRAUD-REMOVED          VALUE 'R'.                          
            05  PA-FRAUD-RPT-DATE            PIC  X(08).                         
-           05  FILLER                       PIC  X(17).                         
+           05  FILLER                       PIC  X(16).                         
