@@ -112,6 +112,11 @@
 
        COPY CVEXPORT.
 
+      *****************************************************************
+      *    Card number normalization work area
+      *****************************************************************
+       COPY CVCRDNRM.
+
       * File Status Variables
        01  WS-FILE-STATUS-AREA.
            05  WS-EXPORT-STATUS                        PIC X(02).
@@ -354,7 +359,10 @@
            INITIALIZE CARD-XREF-RECORD
            
       *    Map export fields to xref record
-           MOVE EXP-XREF-CARD-NUM TO XREF-CARD-NUM
+           MOVE EXP-XREF-CARD-NUM TO WS-CN-VALUE
+           PERFORM CARDNUM-NORMALIZE
+              THRU CARDNUM-NORMALIZE-EXIT
+           MOVE WS-CN-VALUE TO XREF-CARD-NUM
            MOVE EXP-XREF-CUST-ID TO XREF-CUST-ID
            MOVE EXP-XREF-ACCT-ID TO XREF-ACCT-ID
            
@@ -384,7 +392,10 @@
            MOVE EXP-TRAN-MERCHANT-NAME TO TRAN-MERCHANT-NAME
            MOVE EXP-TRAN-MERCHANT-CITY TO TRAN-MERCHANT-CITY
            MOVE EXP-TRAN-MERCHANT-ZIP TO TRAN-MERCHANT-ZIP
-           MOVE EXP-TRAN-CARD-NUM TO TRAN-CARD-NUM
+           MOVE EXP-TRAN-CARD-NUM TO WS-CN-VALUE
+           PERFORM CARDNUM-NORMALIZE
+              THRU CARDNUM-NORMALIZE-EXIT
+           MOVE WS-CN-VALUE TO TRAN-CARD-NUM
            MOVE EXP-TRAN-ORIG-TS TO TRAN-ORIG-TS
            MOVE EXP-TRAN-PROC-TS TO TRAN-PROC-TS
            
@@ -404,7 +415,10 @@
            INITIALIZE CARD-RECORD
            
       *    Map export fields to card record
-           MOVE EXP-CARD-NUM TO CARD-NUM
+           MOVE EXP-CARD-NUM TO WS-CN-VALUE
+           PERFORM CARDNUM-NORMALIZE
+              THRU CARDNUM-NORMALIZE-EXIT
+           MOVE WS-CN-VALUE TO CARD-NUM
            MOVE EXP-CARD-ACCT-ID TO CARD-ACCT-ID
            MOVE EXP-CARD-CVV-CD TO CARD-CVV-CD
            MOVE EXP-CARD-EMBOSSED-NAME TO CARD-EMBOSSED-NAME
@@ -476,6 +490,11 @@
            DISPLAY 'CBIMPORT: Errors Written: ' WS-ERROR-RECORDS-WRITTEN
            DISPLAY 'CBIMPORT: Unknown Record Types: ' 
                    WS-UNKNOWN-RECORD-TYPE-COUNT.
+
+      *****************************************************************
+      *    Normalize a legacy 16 digit card number to 17 digits
+      *****************************************************************
+       COPY CVCRDNRP.
 
       *****************************************************************
        9999-ABEND-PROGRAM.

@@ -70,7 +70,7 @@
       *      File and data Handling                                             
       ******************************************************************        
          05 WS-XREF-RID.                                                        
-           10  WS-CARD-RID-CARDNUM                 PIC X(16).                   
+           10  WS-CARD-RID-CARDNUM                 PIC X(17).                   
            10  WS-CARD-RID-CUST-ID                 PIC 9(09).                   
            10  WS-CARD-RID-CUST-ID-X REDEFINES                                  
                   WS-CARD-RID-CUST-ID              PIC X(09).                   
@@ -207,6 +207,9 @@
                                                                                 
       *- CUSTOMER LAYOUT                                                        
        COPY CVCUS01Y.                                                           
+
+      *- CARD NUMBER NORMALIZATION WORK AREA
+       COPY CVCRDNRM.
                                                                                 
       * ------------------------------------------------------------- *         
        LINKAGE SECTION.                                                         
@@ -372,6 +375,12 @@
                          PA-RQ-MERCHANT-ZIP                                     
                          PA-RQ-TRANSACTION-ID                                   
            END-UNSTRING                                                         
+
+      *    A LEGACY 16 DIGIT CARD NUMBER IS LEFT ZERO PADDED TO 17
+           MOVE PA-RQ-CARD-NUM              TO WS-CN-VALUE
+           PERFORM CARDNUM-NORMALIZE
+              THRU CARDNUM-NORMALIZE-EXIT
+           MOVE WS-CN-VALUE                 TO PA-RQ-CARD-NUM
                                                                                 
            COMPUTE PA-RQ-TRANSACTION-AMT =                                      
                                FUNCTION NUMVAL(WS-TRANSACTION-AMT-AN)           
@@ -1024,3 +1033,7 @@
        9990-EXIT.                                                               
            EXIT.                                                                
       *                                                                         
+      * ------------------------------------------------------------- *
+      * NORMALIZE A CARD NUMBER TO 17 DIGITS
+      * ------------------------------------------------------------- *
+       COPY CVCRDNRP.

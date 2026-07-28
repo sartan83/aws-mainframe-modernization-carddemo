@@ -57,7 +57,7 @@
            02  FILLER REDEFINES CARDNUMF.                                       
              03 CARDNUMA    PICTURE X.                                          
            02  FILLER   PICTURE X(4).                                           
-           02  CARDNUMI  PIC X(16).                                             
+           02  CARDNUMI  PIC X(17).                                             
            02  AUTHDTL    COMP  PIC  S9(4).                                     
            02  AUTHDTF    PICTURE X.                                            
            02  FILLER REDEFINES AUTHDTF.                                        
@@ -221,7 +221,7 @@
            02  CARDNUMP    PICTURE X.                                           
            02  CARDNUMH    PICTURE X.                                           
            02  CARDNUMV    PICTURE X.                                           
-           02  CARDNUMO  PIC X(16).                                             
+           02  CARDNUMO  PIC X(17).                                             
            02  FILLER PICTURE X(3).                                             
            02  AUTHDTC    PICTURE X.                                            
            02  AUTHDTP    PICTURE X.                                            

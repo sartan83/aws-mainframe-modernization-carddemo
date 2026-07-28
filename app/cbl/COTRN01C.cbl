@@ -68,6 +68,11 @@
 
        COPY CVTRA05Y.
 
+      ******************************************************************
+      *    Card number normalization work area
+      ******************************************************************
+       COPY CVCRDNRM.
+
        COPY DFHAID.
        COPY DFHBMSCA.
 
@@ -176,7 +181,10 @@
            IF NOT ERR-FLG-ON
                MOVE TRAN-AMT TO WS-TRAN-AMT
                MOVE TRAN-ID      TO TRNIDI    OF COTRN1AI
-               MOVE TRAN-CARD-NUM      TO CARDNUMI    OF COTRN1AI
+               MOVE TRAN-CARD-NUM      TO WS-CN-VALUE
+               PERFORM CARDNUM-NORMALIZE
+                  THRU CARDNUM-NORMALIZE-EXIT
+               MOVE WS-CN-VALUE        TO CARDNUMI    OF COTRN1AI
                MOVE TRAN-TYPE-CD        TO TTYPCDI   OF COTRN1AI
                MOVE TRAN-CAT-CD        TO TCATCDI   OF COTRN1AI
                MOVE TRAN-SOURCE       TO TRNSRCI  OF COTRN1AI
@@ -324,6 +332,11 @@
                                    MCITYI   OF COTRN1AI
                                    MZIPI    OF COTRN1AI
                                    WS-MESSAGE.
+
+      ******************************************************************
+      *    Normalize a legacy 16 digit card number to 17 digits
+      ******************************************************************
+       COPY CVCRDNRP.
 
       *
       * Ver: CardDemo_v1.0-15-g27d6c6f-68 Date: 2022-07-19 23:12:34 CDT

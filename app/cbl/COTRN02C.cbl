@@ -53,7 +53,7 @@
          05 WS-TRAN-AMT                PIC +99999999.99.
          05 WS-TRAN-DATE               PIC X(08) VALUE '00/00/00'.
          05 WS-ACCT-ID-N               PIC 9(11) VALUE 0.
-         05 WS-CARD-NUM-N              PIC 9(16) VALUE 0.
+         05 WS-CARD-NUM-N              PIC 9(17) VALUE 0.
          05 WS-TRAN-ID-N               PIC 9(16) VALUE ZEROS.
          05 WS-TRAN-AMT-N              PIC S9(9)V99 VALUE ZERO.
          05 WS-TRAN-AMT-E              PIC +99999999.99 VALUE ZEROS.
@@ -88,6 +88,7 @@
        COPY CVTRA05Y.
        COPY CVACT01Y.
        COPY CVACT03Y.
+       COPY CVCRDNRM.
 
        COPY DFHAID.
        COPY DFHBMSCA.
@@ -208,6 +209,10 @@
                    PERFORM READ-CXACAIX-FILE
                    MOVE XREF-CARD-NUM         TO CARDNINI OF COTRN2AI
                WHEN CARDNINI OF COTRN2AI NOT = SPACES AND LOW-VALUES
+                   MOVE CARDNINI OF COTRN2AI TO WS-CN-VALUE
+                   PERFORM CARDNUM-NORMALIZE
+                      THRU CARDNUM-NORMALIZE-EXIT
+                   MOVE WS-CN-VALUE          TO CARDNINI OF COTRN2AI
                    IF CARDNINI OF COTRN2AI IS NOT NUMERIC
                        MOVE 'Y'     TO WS-ERR-FLG
                        MOVE 'Card Number must be Numeric...' TO
@@ -777,6 +782,11 @@
                                    MZIPI    OF COTRN2AI
                                    CONFIRMI OF COTRN2AI
                                    WS-MESSAGE.
+
+      *----------------------------------------------------------------*
+      *          Normalize a card number to 17 digits
+      *----------------------------------------------------------------*
+       COPY CVCRDNRP.
 
       *
       * Ver: CardDemo_v1.0-15-g27d6c6f-68 Date: 2022-07-19 23:12:34 CDT

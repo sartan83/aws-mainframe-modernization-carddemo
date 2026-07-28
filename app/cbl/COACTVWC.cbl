@@ -71,7 +71,7 @@
       *      File and data Handling                                             
       ******************************************************************        
          05  WS-XREF-RID.                                                       
-           10  WS-CARD-RID-CARDNUM                 PIC X(16).                   
+           10  WS-CARD-RID-CARDNUM                 PIC X(17).                   
            10  WS-CARD-RID-CUST-ID                 PIC 9(09).                   
            10  WS-CARD-RID-CUST-ID-X REDEFINES                                  
                   WS-CARD-RID-CUST-ID              PIC X(09).                   
@@ -249,6 +249,11 @@
                                                                                 
       *CARD XREF LAYOUT                                                         
        COPY CVACT03Y.                                                           
+
+      ******************************************************************
+      *    Card number normalization work area
+      ******************************************************************
+       COPY CVCRDNRM.
                                                                                 
       *CUSTOMER LAYOUT                                                          
        COPY CVCUS01Y.                                                           
@@ -737,7 +742,10 @@
            EVALUATE WS-RESP-CD                                                  
                WHEN DFHRESP(NORMAL)                                             
                   MOVE XREF-CUST-ID               TO CDEMO-CUST-ID              
-                  MOVE XREF-CARD-NUM              TO CDEMO-CARD-NUM             
+                  MOVE XREF-CARD-NUM              TO WS-CN-VALUE                
+                  PERFORM CARDNUM-NORMALIZE                                     
+                     THRU CARDNUM-NORMALIZE-EXIT                                
+                  MOVE WS-CN-VALUE                TO CDEMO-CARD-NUM             
                WHEN DFHRESP(NOTFND)                                             
                   SET INPUT-ERROR                 TO TRUE                       
                   SET FLG-ACCTFILTER-NOT-OK       TO TRUE                       
@@ -936,6 +944,11 @@
            END-EXEC                                                             
            .                                                                    
                                                                                 
+      ******************************************************************
+      *    Normalize a legacy 16 digit card number to 17 digits
+      ******************************************************************
+       COPY CVCRDNRP.
+
       *
       * Ver: CardDemo_v1.0-15-g27d6c6f-68 Date: 2022-07-19 23:12:32 CDT
       *
