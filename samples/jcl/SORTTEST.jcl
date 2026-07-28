@@ -20,8 +20,8 @@
 //SORTIN   DD DISP=SHR,                                                 
 //         DSN=AWS.M2.CARDDEMO.TRANSACT.BKUP(0)                                 
 //SYMNAMES DD *
-TRAN-CARD-NUM,263,16,ZD
-TRAN-PROC-DT,305,10,CH               
+TRAN-CARD-NUM,263,17,ZD
+TRAN-PROC-DT,306,10,CH               
 PARM-DATE,C'2022-06-02'                              
 //SYSIN    DD *                                                         
  SORT FIELDS=(TRAN-CARD-NUM,A) 

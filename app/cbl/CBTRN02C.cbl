@@ -75,8 +75,8 @@
                                                                                 
        FD  XREF-FILE.                                                           
        01  FD-XREFFILE-REC.                                                     
-           05 FD-XREF-CARD-NUM                  PIC X(16).                      
-           05 FD-XREF-DATA                      PIC X(34).                      
+           05 FD-XREF-CARD-NUM                  PIC X(17).                      
+           05 FD-XREF-DATA                      PIC X(33).                      
                                                                                 
        FD  DALYREJS-FILE.                                                       
        01  FD-REJS-RECORD.                                                      
@@ -110,6 +110,9 @@
            05  TRANFILE-STAT2      PIC X.                                       
                                                                                 
        COPY CVACT03Y.                                                           
+
+      *    Card number normalization work area
+       COPY CVCRDNRM.
        01  XREFFILE-STATUS.                                                     
            05  XREFFILE-STAT1      PIC X.                                       
            05  XREFFILE-STAT2      PIC X.                                       
@@ -344,6 +347,11 @@
       *---------------------------------------------------------------*         
        1000-DALYTRAN-GET-NEXT.                                                  
            READ DALYTRAN-FILE INTO DALYTRAN-RECORD.                             
+      *    A LEGACY 16 DIGIT CARD NUMBER IS LEFT ZERO PADDED TO 17
+           MOVE DALYTRAN-CARD-NUM TO WS-CN-VALUE
+           PERFORM CARDNUM-NORMALIZE
+              THRU CARDNUM-NORMALIZE-EXIT
+           MOVE WS-CN-VALUE TO DALYTRAN-CARD-NUM
            IF  DALYTRAN-STATUS = '00'                                           
                MOVE 0 TO APPL-RESULT                                            
       *        DISPLAY DALYTRAN-RECORD                                          
@@ -726,6 +734,11 @@
            END-IF                                                               
            EXIT.                                                                
                                                                                 
+      ******************************************************************
+      *    Normalize a legacy 16 digit card number to 17 digits
+      ******************************************************************
+       COPY CVCRDNRP.
+
       *
       * Ver: CardDemo_v2.0-25-gdb72e6b-235 Date: 2025-04-29 11:01:29 CDT
       *

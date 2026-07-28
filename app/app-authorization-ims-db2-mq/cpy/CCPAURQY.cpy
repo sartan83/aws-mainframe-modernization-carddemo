@@ -18,7 +18,7 @@
       ******************************************************************
            05  PA-RQ-AUTH-DATE              PIC  X(06).
            05  PA-RQ-AUTH-TIME              PIC  X(06).                         
-           05  PA-RQ-CARD-NUM               PIC  X(16).                         
+           05  PA-RQ-CARD-NUM               PIC  X(17).                         
            05  PA-RQ-AUTH-TYPE              PIC  X(04).                         
            05  PA-RQ-CARD-EXPIRY-DATE       PIC  X(04).                         
            05  PA-RQ-MESSAGE-TYPE           PIC  X(06).                         

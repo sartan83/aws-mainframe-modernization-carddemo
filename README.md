@@ -324,6 +324,7 @@ Admin users can perform the following functions:
 | CBPAUP0J | CBPAUP0C | Purge Expired Authorizations                         | IMS-DB2-MQ: Pending Authorizations |
 | MNTTRDB2 | COBTUPDT | Maintain Transaction type table                      | Db2: Transaction Type Mgmt |
 | WAITSTEP | COBSWAIT | Wait job for given time                              |                |
+| CBCRDCVT | CBCRDCVT | One time conversion of the card number to 17 digits  |                |
 
 ### Application Screens
 
@@ -349,6 +350,28 @@ Admin users can perform the following functions:
 |:----------|:----------------|:-------------------|
 | **Base Application** | Customer<br>Account<br>Card<br>Transaction<br>Bill Payment<br>Statement/Report | COBOL<br>CICS<br>JCL (Batch)<br>VSAM (KSDS with AIX) |
 | **Optional Features** | Authorization<br>Fraud<br>Transaction Type (Extension) | DB2<br>MQ<br>IMS DB<br>JCL Utilities<br>Complex data formats<br>Various dataset types<br>Advanced copybook structures |
+
+## Credit Card Number Format
+
+The credit card number is a 17 digit field (`CARD-NUM`, `XREF-CARD-NUM`, `TRAN-CARD-NUM`,
+`PA-CARD-NUM`, `CARD_NUM`). A legacy 16 digit card number is represented as a left zero
+padded 17 digit value (`'0'` followed by the 16 digits).
+
+- Physical record lengths are unchanged (CARDDAT 150, CARDXREF 50, TRANSACT 350, export
+  record 500); the extra byte is taken from the trailing FILLER of each record. The only
+  layout with no FILLER to absorb it is the ASCII sample cross reference file
+  `app/data/ASCII/cardxref.txt`, whose line length grows from 36 to 37 characters.
+- VSAM key lengths and alternate index offsets were updated accordingly:
+  `CARDFILE` `KEYS(17 0)` / AIX `KEYS(11 17)`, `XREFFILE` `KEYS(17 0)` / AIX `KEYS(11,26)`,
+  `TRANFILE` and `TRANIDX` AIX `KEYS(26 305)`, `CREASTMT` `KEYS(33 0)`.
+- `app/cpy/CVCRDNRM.cpy` (work area) and `app/cpy/CVCRDNRP.cpy` (paragraph) normalize a
+  card number to 17 digits and are used on screen input and wherever data that may still
+  be in the legacy format is read (daily transaction feed, MQ authorization request,
+  import files, cross reference reads).
+- `CBCRDCVT` (`app/jcl/CBCRDCVT.jcl`) is the one time conversion job: it unloads the
+  legacy CARDDAT, CARDXREF and TRANSACT files, rewrites them with the 17 digit card
+  number, and deletes the old clusters so the standard define jobs can reload them with
+  the new key lengths.
 
 ## Support
 

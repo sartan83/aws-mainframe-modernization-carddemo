@@ -81,6 +81,11 @@
        COPY CVACT03Y.
        COPY CVTRA05Y.
 
+      ******************************************************************
+      *    Card number normalization work area
+      ******************************************************************
+       COPY CVCRDNRM.
+
        COPY DFHAID.
        COPY DFHBMSCA.
 
@@ -222,7 +227,10 @@
                    MOVE 'POS TERM'           TO TRAN-SOURCE
                    MOVE 'BILL PAYMENT - ONLINE' TO TRAN-DESC
                    MOVE ACCT-CURR-BAL        TO TRAN-AMT
-                   MOVE XREF-CARD-NUM        TO TRAN-CARD-NUM
+                   MOVE XREF-CARD-NUM        TO WS-CN-VALUE
+                   PERFORM CARDNUM-NORMALIZE
+                      THRU CARDNUM-NORMALIZE-EXIT
+                   MOVE WS-CN-VALUE          TO TRAN-CARD-NUM
                    MOVE 999999999            TO TRAN-MERCHANT-ID
                    MOVE 'BILL PAYMENT'       TO TRAN-MERCHANT-NAME
                    MOVE 'N/A'                TO TRAN-MERCHANT-CITY
@@ -566,6 +574,11 @@
                                    WS-MESSAGE.
 
 
+
+      ******************************************************************
+      *    Normalize a legacy 16 digit card number to 17 digits
+      ******************************************************************
+       COPY CVCRDNRP.
 
       *
       * Ver: CardDemo_v1.0-15-g27d6c6f-68 Date: 2022-07-19 23:12:32 CDT

@@ -16,7 +16,7 @@
       * either express or implied. See the License for the specific
       * language governing permissions and limitations under the License
       ******************************************************************
-           05  PA-RL-CARD-NUM               PIC  X(16).                         
+           05  PA-RL-CARD-NUM               PIC  X(17).                         
            05  PA-RL-TRANSACTION-ID         PIC  X(15).                         
            05  PA-RL-AUTH-ID-CODE           PIC  X(06).                         
            05  PA-RL-AUTH-RESP-CODE         PIC  X(02).                         

@@ -60,14 +60,14 @@
        FILE SECTION.                                                            
        FD  TRANSACT-FILE.                                                       
        01 FD-TRANFILE-REC.                                                      
-          05 FD-TRANS-DATA      PIC X(304).                                     
+          05 FD-TRANS-DATA      PIC X(305).                                     
           05 FD-TRAN-PROC-TS    PIC X(26).                                      
-          05 FD-FILLER          PIC X(20).                                      
+          05 FD-FILLER          PIC X(19).                                      
                                                                                 
        FD  XREF-FILE.                                                           
        01  FD-CARDXREF-REC.                                                     
-           05 FD-XREF-CARD-NUM                  PIC X(16).                      
-           05 FD-XREF-DATA                      PIC X(34).                      
+           05 FD-XREF-CARD-NUM                  PIC X(17).                      
+           05 FD-XREF-DATA                      PIC X(33).                      
                                                                                 
        FD  TRANTYPE-FILE.                                                       
        01 FD-TRANTYPE-REC.                                                      
@@ -134,7 +134,7 @@
            05 WS-PAGE-TOTAL      PIC S9(09)V99 VALUE 0.                         
            05 WS-ACCOUNT-TOTAL   PIC S9(09)V99 VALUE 0.                         
            05 WS-GRAND-TOTAL     PIC S9(09)V99 VALUE 0.                         
-           05 WS-CURR-CARD-NUM   PIC X(16) VALUE SPACES.                        
+           05 WS-CURR-CARD-NUM   PIC X(17) VALUE SPACES.                        
                                                                                 
        01 IO-STATUS.                                                            
           05 IO-STAT1           PIC X.                                          

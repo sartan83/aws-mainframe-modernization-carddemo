@@ -22,7 +22,7 @@
       ******************************************************************
 
            EXEC SQL DECLARE CARDDEMO.AUTHFRDS TABLE
-           ( CARD_NUM                       CHAR(16) NOT NULL,                  
+           ( CARD_NUM                       CHAR(17) NOT NULL,                  
              AUTH_TS                        TIMESTAMP NOT NULL,                 
              AUTH_TYPE                      CHAR(4),                            
              CARD_EXPIRY_DATE               CHAR(4),                            
@@ -53,7 +53,7 @@
       * COBOL DECLARATION FOR TABLE AWSTSSC.AUTHFRDS                   *        
       ******************************************************************        
        01  DCLAUTHFRDS.                                                         
-           10 CARD-NUM             PIC X(16).                                   
+           10 CARD-NUM             PIC X(17).                                   
            10 AUTH-TS              PIC X(26).                                   
            10 AUTH-TYPE            PIC X(4).                                    
            10 CARD-EXPIRY-DATE     PIC X(4).                                    
